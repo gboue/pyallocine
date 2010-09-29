@@ -13,8 +13,8 @@
 	
 	Colophon:
 	
-		urllib
-		re 
+		urllib to get raw html data from allocine
+		re extensive usage of regexp for getting parts
 		optparse for the command line
 	
 		Inspired from ruby version 
@@ -104,9 +104,6 @@ class Movie:
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
 				self.__dict__[regxp_id] = d
-				# d.encode('utf-8')
-				
-				#print "       %s " % d
 			
 			
 	@classmethod
@@ -151,14 +148,7 @@ class Movie:
 					movies[id][regxp_id] = d
 			
 			logging.info(movies[id])
-			
-			#str = re.search(r_info, info)
-			#if str:
-			#	movies[id]={'image':img,'name' : name.strip(), 'date' : str.group(1).strip(),\
-			#	'director' : str.group(2).strip(),'actors' : str.group(3).strip() }
-			#else:
-			#	movies[id]={'image':img, 'name' : name.strip(), 'info' : info}
-			
+		
 		return movies	
 	#end find
   
