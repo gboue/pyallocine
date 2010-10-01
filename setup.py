@@ -25,7 +25,6 @@ setup(name='pyallocine',
       zip_safe=False,
       install_requires=[
       ],
-      test_suite = "runtests.runtests"
       )
 
 
