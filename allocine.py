@@ -1,1 +1,0 @@
-/Users/guillaumeboue/Webfaction/django-dev/gborepo/lib/pyallocine/allocine.py
