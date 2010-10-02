@@ -113,7 +113,7 @@ class Movie:
   	def find(self, search):
 		# 1. Clean the search string
 		#search = search.replace(' ', '+')
-		search = search.decode('utf-8').encode('iso-8859-1')
+		#search = search.decode('utf-8').encode('iso-8859-1')
 		search = urllib.quote_plus(search)
 		logging.info(search)
     
