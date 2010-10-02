@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 from setuptools import setup, find_packages
-import sys, os
+import os,sys
 
 from pyallocine  import VERSION
 
