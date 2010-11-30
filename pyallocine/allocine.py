@@ -64,7 +64,7 @@ MOVIE_REGEXPS = {
   'original_title' : 'Titre original :(.*?)<br/>',
   'actors' : 'Avec (.*?) <a class="underline"',
   'synopsis' : 'Synopsis : </span>(.*?)</p>',
-  'image' : """<a href="/film/fichefilm-\d*/affiches/">\s*<img src='(.*?)'.*?/><img class="icomagnifier" """,
+  'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
   'interdit' : '<span class="insist">(Interdit.*?)</span>'
 }
 
