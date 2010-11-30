@@ -4,6 +4,8 @@
 	allocine.py allows searching for movies on allocine and retrieving
 	information about a particular movie
 	
+	http://regexpal.com/ used for testing regexp
+	
 	It mainly parses the allocine website
 	
 	Usage:
