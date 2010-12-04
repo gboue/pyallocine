@@ -56,7 +56,7 @@ FIND_INFO_MOVIE_REGEXP ={
 
 
 MOVIE_REGEXPS = {
-  'title' : '<h1>(.*?)<\/h1>',
+  'title' : '<h1.*?>(.*?)<\/h1>',
   'directors' : u'R.*? par <span class="bold"><a .*?>(.*?)<\/a><\/span>',
   'nat' : 'Long-m.*?trage(.*?)\.',
   'genres' : 'Genre : (.*?)<br />',
@@ -65,7 +65,7 @@ MOVIE_REGEXPS = {
   'production_date' : u'Ann.*?e de production :(.*?)</a>',
   'original_title' : 'Titre original :(.*?)<br/>',
   'actors' : 'Avec (.*?) <a class="underline"',
-  'synopsis' : 'Synopsis : </span>(.*?)</p>',
+  'synopsis' : '<span property="v:summary">(.*?)</span>',
   'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
   'interdit' : '<span class="insist">(Interdit.*?)</span>'
 }
