@@ -61,10 +61,10 @@ MOVIE_REGEXPS = {
   'nat' : 'Long-m.*?trage(.*?)\.',
   'genres' : 'Genre : (.*?)<br />',
   'out_date' : 'Date de sortie cin.*?ma :.*?<a.*?>(.*?)</a>',
-  'duree' : u'Dur.*?e :(.*?)Ann',
+  'duree' : u'Dur.*?e : (.*?)Ann',
   'production_date' : u'Ann.*?e de production :(.*?)</a>',
   'original_title' : 'Titre original :(.*?)<br/>',
-  'actors' : 'Avec (.*?) <a class="underline"',
+  'actors' : 'Avec (.*?)<a class="underline" href="/film/cast',
   'synopsis' : '<span property="v:summary">(.*?)</span>',
   'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
   'interdit' : '<span class="insist">(Interdit.*?)</span>'
