@@ -28,7 +28,7 @@
 """
 
 from optparse import OptionParser
-import sys, os, re, md5, random
+import sys, os, re, random
 import urllib, urllib2, time, base64
 import xml.dom.minidom
 import locale
