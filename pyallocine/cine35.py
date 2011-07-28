@@ -35,8 +35,13 @@ def get_all_movie():
 	
 	match_list = re.findall(MOVIE_INFO_REGEXP, movies_data, re.DOTALL | re.MULTILINE | re.I)
 
-	
 	return match_list
+
+def get_all_movie_unicode():
+
+	movies_from_cine35 = get_all_movie()
+	u_movies_from_cine35 =  [(x.decode('utf-8'),y.decode('utf-8')) for  x, y in movies_from_cine35]
+	return u_movies_from_cine35
 
 def search_movie(movie_title):
 	
