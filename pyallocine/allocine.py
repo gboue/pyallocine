@@ -179,10 +179,14 @@ class Movie:
 		info = u.info()
 		u.close()
 
+		#import pdb
+		#pdb.set_trace()
+
 		# 2. utf8 conversion
 		charset = "utf-8"    
 		ignore, charset = info['Content-Type'].split('charset=')
-		data = data.decode(charset).encode('utf-8')  
+		data = data.decode(charset)
+		#.encode('utf-8')  
 
 		logging.debug(data)
 
