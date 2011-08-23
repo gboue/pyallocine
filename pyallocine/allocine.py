@@ -33,10 +33,12 @@ import urllib, urllib2, time, base64
 import xml.dom.minidom
 import locale
 import logging
+import HTMLParser
 
 # VAR AND CONSTANTS 
 # =================
 
+h = HTMLParser.HTMLParser()
 
 # URLS
 
@@ -54,20 +56,22 @@ FIND_INFO_MOVIE_REGEXP ={
 	'actors': "avec(.*)",
 }
 
-
+# par.*</span></th><td>.*?</td>
 MOVIE_REGEXPS = {
   'title' : '<h1.*?>(.*?)<\/h1>',
-  'directors' : u'R.*? par <span class="bold"><a .*?>(.*?)<\/a><\/span>',
-  'nat' : 'Long-m.*?trage(.*?)\.',
-  'genres' : 'Genre : (.*?)<br />',
-  'out_date' : 'Date de sortie cin.*?ma :.*?<a.*?>(.*?)</a>',
-  'duree' : u'Dur.*?e : (.*?)Ann',
-  'production_date' : u'Ann.*?e de production :(.*?)</a>',
-  'original_title' : 'Titre original :(.*?)<br/>',
-  'actors' : 'Avec (.*?)<a class="underline" href="/film/cast',
-  'synopsis' : '<span property="v:summary">(.*?)</span>',
-  'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
-  'interdit' : '<span class="insist">(Interdit.*?)</span>'
+  'directors' : u'Réalisé par(.*?)</td>',
+  'nat' : u'Nationalité(.*?)</td>',
+  'genres' : u'Genre(.*?)</td>',
+  'out_date' : 'Date de sortie.*?datePublished.*?>(.*?)</span>',
+  'duree' : u'Date de sortie.*?duration.*?>(.*?)</span>',
+  'production_date' : u'Année de production(.*?)</td>',
+  'original_title' : 'Titre original(.*?)</td>',
+  'actors' : 'Avec(.*?)plus</span>.*?</td>',
+  'synopsis' : u'Synopsis et détails.*?<p itemprop="description">(.*?)</p>',
+  'image' : u"""img_side_content pos_rel.*?src='(.*?)'.*?itemprop="image""",
+  'interdit' : '<span class="insist">(Interdit.*?)</span>',
+  'note_presse': u"""Presse(.*?)<span class="lighten fs11""",
+  'note_spectateur': u"""Spectateurs(.*?)<span class="lighten fs11"""
 }
 
 # MAIN CLASS
@@ -102,9 +106,12 @@ class Movie:
 			str = re.search(r, data)
 			if str:
 				d = re.sub('<(.+?)>','', str.group(1).strip())
+				d = h.unescape(d)
 				d  = re.sub('\r\n','', d)
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
+				d = d.replace("\n","")
+				d = d.strip()
 				self.__dict__[regxp_id] = d
 				# d.encode('utf-8')
 				
@@ -137,6 +144,8 @@ class Movie:
 			info = re.sub('<br>','###', info)
 			info = re.sub('<(.+?)>','', info)
 			info = re.sub('\r\n','', info)
+			info  = re.sub('\r','', info)
+			info  = re.sub('\n','', info)
 			info = re.sub('\t','', info)
 			info = re.sub('\s+',' ', info)
 
@@ -148,6 +157,8 @@ class Movie:
 				if str:
 					d = re.sub('<(.+?)>','', str.group(1).strip())
 					d  = re.sub('\r\n','', d)
+					d  = re.sub('\r','', d)
+					d  = re.sub('\n','', d)
 					d  = re.sub('[ ]+',' ', d)
 					d  = re.sub('\s\s+',' ', d)
 					movies[id][regxp_id] = d
@@ -179,10 +190,14 @@ class Movie:
 		info = u.info()
 		u.close()
 
+		#import pdb
+		#pdb.set_trace()
+
 		# 2. utf8 conversion
 		charset = "utf-8"    
 		ignore, charset = info['Content-Type'].split('charset=')
-		data = data.decode(charset).encode('utf-8')  
+		data = data.decode(charset)
+		#.encode('utf-8')  
 
 		logging.debug(data)
 
