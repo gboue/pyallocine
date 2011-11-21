@@ -57,16 +57,17 @@ FIND_INFO_MOVIE_REGEXP ={
 
 MOVIE_REGEXPS = {
   'title' : '<h1.*?>(.*?)<\/h1>',
-  'directors' : u'R.*? par <span class="bold"><a .*?>(.*?)<\/a><\/span>',
-  'nat' : 'Long-m.*?trage(.*?)\.',
-  'genres' : 'Genre : (.*?)<br />',
-  'out_date' : 'Date de sortie cin.*?ma :.*?<a.*?>(.*?)</a>',
-  'duree' : u'Dur.*?e : (.*?)Ann',
+  'directors' : u'R.*? par<\/span>(?:.*?)<div class="oflow_a">(.*?)<\/li>',
+  'nat' : 'Nationalit.*?<\/span>(.*?)<\/li>',
+  'genres' : 'Genre<\/span>(.*?)<\/li>',
+  'out_date' : u'itemprop="datePublished" content="(.*?)"',
+  'duree' : u"""itemprop="duration"(?:.*?)>(.*?)</span>""",
   'production_date' : u'Ann.*?e de production :(.*?)</a>',
-  'original_title' : 'Titre original :(.*?)<br/>',
-  'actors' : 'Avec (.*?)<a class="underline" href="/film/cast',
-  'synopsis' : '<span property="v:summary">(.*?)</span>',
-  'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
+  'original_title' : '<th>Titre original</th><td>(.*?)<\/td>',
+  'actors' : 'Avec.*?<\/span>(.*?)<\/li>',
+  'synopsis' : '<p itemprop="description">(.*?)</p>',
+  #'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
+  'image' : """<link rel="image_src" href="(.*?)" />""",
   'interdit' : '<span class="insist">(Interdit.*?)</span>'
 }
 
@@ -103,6 +104,8 @@ class Movie:
 			if str:
 				d = re.sub('<(.+?)>','', str.group(1).strip())
 				d  = re.sub('\r\n','', d)
+				d  = re.sub('\r','', d)
+				d  = re.sub('\n','', d)
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
 				self.__dict__[regxp_id] = d
