@@ -56,20 +56,74 @@ FIND_INFO_MOVIE_REGEXP ={
 
 
 MOVIE_REGEXPS = {
-  'title' : '<h1.*?>(.*?)<\/h1>',
+  'title' : u'<h1.*?>(.*?)<\/h1>',
   'directors' : u'R.*? par<\/span>(?:.*?)<div class="oflow_a">(.*?)<\/li>',
-  'nat' : 'Nationalit.*?<\/span>(.*?)<\/li>',
-  'genres' : 'Genre<\/span>(.*?)<\/li>',
+  'nat' : u'Nationalit.*?<\/span>(.*?)<\/li>',
+  'genres' : u'Genre<\/span>(.*?)<\/li>',
   'out_date' : u'itemprop="datePublished" content="(.*?)"',
   'duree' : u"""itemprop="duration"(?:.*?)>(.*?)</span>""",
   'production_date' : u'Ann.*?e de production :(.*?)</a>',
-  'original_title' : '<th>Titre original</th><td>(.*?)<\/td>',
-  'actors' : 'Avec.*?<\/span>(.*?)<\/li>',
-  'synopsis' : '<p itemprop="description">(.*?)</p>',
-  #'image' : """<em class="imagecontainer">(?:.*?)<img src='(.*?)'""",
-  'image' : """<link rel="image_src" href="(.*?)" />""",
-  'interdit' : '<span class="insist">(Interdit.*?)</span>'
+  'original_title' : u'<th>Titre original</th><td>(.*?)<\/td>',
+  'actors' : u'Avec.*?<\/span>(.*?)<\/li>',
+  'synopsis' : u'<p itemprop="description">(.*?)</p>',
+  'image' : u"""<link rel="image_src" href="(.*?)" />""",
+  'interdit' : u'<span class="insist">(Interdit.*?)</span>'
 }
+
+
+import re, htmlentitydefs
+
+##
+# Removes HTML or XML character references and entities from a text string.
+#
+# @param text The HTML (or XML) source text.
+# @return The plain text, as a Unicode string, if necessary.
+
+def unescape(text):
+   """Removes HTML or XML character references 
+      and entities from a text string.
+      keep &amp;, &gt;, &lt; in the source code.
+   from Fredrik Lundh
+   http://effbot.org/zone/re-sub.htm#unescape-html
+   """
+   def fixup(m):
+      text = m.group(0)
+      if text[:2] == "&#":
+         # character reference
+         try:
+            if text[:3] == "&#x":
+               return unichr(int(text[3:-1], 16))
+            else:
+               return unichr(int(text[2:-1]))
+         except ValueError:
+            print "erreur de valeur"
+            pass
+      else:
+         # named entity
+         try:
+            if text[1:-1] == "amp":
+               text = "&amp;amp;"
+            elif text[1:-1] == "gt":
+               text = "&amp;gt;"
+            elif text[1:-1] == "lt":
+               text = "&amp;lt;"
+            else:
+               print text[1:-1]
+               text = unichr(htmlentitydefs.name2codepoint[text[1:-1]])
+         except KeyError:
+            print "keyerror"
+            pass
+      return text # leave as is
+
+   res = ""
+   try:
+      text = text.decode('utf-8')
+      res = re.sub("&#?\w+;", fixup, text)
+      res = res.encode('utf-8')
+   except:
+	  res = re.sub("&#?\w+;", fixup, text)
+
+   return res
 
 # MAIN CLASS
 # ==========
@@ -108,6 +162,7 @@ class Movie:
 				d  = re.sub('\n','', d)
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
+				d  = unescape(d)
 				self.__dict__[regxp_id] = d
 				# d.encode('utf-8')
 				
@@ -142,7 +197,7 @@ class Movie:
 			info = re.sub('\r\n','', info)
 			info = re.sub('\t','', info)
 			info = re.sub('\s+',' ', info)
-
+			
 			logging.info(info)
 			for regxp_id, regxp in FIND_INFO_MOVIE_REGEXP.iteritems():
 
@@ -153,6 +208,7 @@ class Movie:
 					d  = re.sub('\r\n','', d)
 					d  = re.sub('[ ]+',' ', d)
 					d  = re.sub('\s\s+',' ', d)
+					d = unescape(d)
 					movies[id][regxp_id] = d
 			
 			logging.info(movies[id])
