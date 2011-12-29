@@ -162,6 +162,12 @@ class Movie:
 				d  = re.sub('\n','', d)
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
+
+				# special treatment for plus of actors
+				d  = re.sub('plusplus$','#£', d)
+				d  = re.sub('plus$','', d)
+				d  = re.sub('#£$','plus', d)
+				d  = re.sub(',$','', d)
 				d  = unescape(d)
 				self.__dict__[regxp_id] = d
 				# d.encode('utf-8')
