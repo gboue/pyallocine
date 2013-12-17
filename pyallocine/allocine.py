@@ -58,6 +58,7 @@ FIND_INFO_MOVIE_REGEXP ={
 
 # par.*</span></th><td>.*?</td>
 MOVIE_REGEXPS = {
+
   'title' : '<h1.*?>(.*?)<\/h1>',
   'directors' : u'Réalisé par(.*?)</td>',
   'nat' : u'Nationalité(.*?)</td>',
@@ -73,6 +74,10 @@ MOVIE_REGEXPS = {
   'note_presse': u"""Presse(.*?)<span class="lighten fs11""",
   'note_spectateur': u"""Spectateurs(.*?)<span class="lighten fs11"""
 }
+
+
+import re, htmlentitydefs
+
 
 # MAIN CLASS
 # ==========
@@ -108,10 +113,19 @@ class Movie:
 				d = re.sub('<(.+?)>','', str.group(1).strip())
 				d = h.unescape(d)
 				d  = re.sub('\r\n','', d)
+				d  = re.sub('\r','', d)
+				d  = re.sub('\n','', d)
 				d  = re.sub('[ ]+',' ', d)
 				d  = re.sub('\s\s+',' ', d)
 				d = d.replace("\n","")
 				d = d.strip()
+
+
+				# special treatment for plus of actors
+				d  = re.sub('plusplus$','#£', d)
+				d  = re.sub('plus$','', d)
+				d  = re.sub('#£$','plus', d)
+				d  = re.sub(',$','', d)
 				self.__dict__[regxp_id] = d
 				# d.encode('utf-8')
 				
@@ -148,7 +162,7 @@ class Movie:
 			info  = re.sub('\n','', info)
 			info = re.sub('\t','', info)
 			info = re.sub('\s+',' ', info)
-
+			
 			logging.info(info)
 			for regxp_id, regxp in FIND_INFO_MOVIE_REGEXP.iteritems():
 
@@ -161,6 +175,7 @@ class Movie:
 					d  = re.sub('\n','', d)
 					d  = re.sub('[ ]+',' ', d)
 					d  = re.sub('\s\s+',' ', d)
+					d = unescape(d)
 					movies[id][regxp_id] = d
 			
 			logging.info(movies[id])
