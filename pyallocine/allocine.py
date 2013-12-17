@@ -175,7 +175,7 @@ class Movie:
 					d  = re.sub('\n','', d)
 					d  = re.sub('[ ]+',' ', d)
 					d  = re.sub('\s\s+',' ', d)
-					d = unescape(d)
+					d = h.unescape(d)
 					movies[id][regxp_id] = d
 			
 			logging.info(movies[id])
